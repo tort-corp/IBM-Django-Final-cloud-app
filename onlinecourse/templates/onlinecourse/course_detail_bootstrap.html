@@ -55,22 +55,6 @@
             https://www.w3schools.com/bootstrap4/bootstrap_collapse.asp-->
 
 
-        <!-- <div class="container-fluid">
-            <a href="#exam" class="btn btn-primary" data-toggle="collapse">Start Exam</a>
-            <div id=exam class="collapse">
-                <div class="card mt-1">
-                    {% for question in course.question_set.all %}
-                        <div class="card-header"><h4>{{question.question_text}}</h4></div>
-                        {% for choice in question.choice_set.all %}
-                            <div class="card-body"><h5>{{choice.choice_text}}</h5></div>
-                        {% endfor %}
-                    {% endfor %}
-                </div>
-            </div>
-        </div> -->
-
-
-
             <!--
             A collapse example here:
            
@@ -99,7 +83,7 @@
                     <a href="#exam" class="btn btn-primary" data-toggle="collapse">Start Exam</a>
                     <div id=exam class="collapse">
                 <!-- A choice submission form example -->
-                        <form id="questionform" action="point to a submit view" method="post">
+                        <form id="questionform" action="{% url 'onlinecourse:submit' course.id%}" method="post">
                             {% for question in course.question_set.all %}   
                                 <div class="card mt-1">
                                     <div class="card-header"><h5>{{ question.question_text }}</h5></div>
