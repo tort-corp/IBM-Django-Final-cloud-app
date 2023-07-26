@@ -146,36 +146,60 @@ def extract_answers(request):
         # Get the selected choice ids from the submission record
         # For each selected choice, check if it is a correct answer or not
         # Calculate the total score
-def show_exam_result(request, course_id, submission_id):
-    course = get_object_or_404(Course, pk=course_id)
-    submission = get_object_or_404(Submission, pk=submission_id)
-    total_points = 0.1
-    points_possible = 0
-    user = request.user
 
 
-    choices = extract_answers(request)
-    for choice in choices:
-        for question in Quesiton_set.all:
-            if choice == question.choices:
-                points_possible = quesiton.grade
-            if choice.is_correct == True:
-                total_points += points_possible
+# def show_exam_result(request, course_id, submission_id):
+#     course = get_object_or_404(Course, pk=course_id)
+#     submission = get_object_or_404(Submission, pk=submission_id)
+#     total_points = 0.1
+#     points_possible = 0
+#     user = request.user
+
+
+#     choices = extract_answers(request)
+#     for choice in choices:
+#         for question in Quesiton_set.all:
+#             if choice == question.choices:
+#                 points_possible = quesiton.grade
+#             if choice.is_correct == True:
+#                 total_points += points_possible
     
-    # grade = (total_points / points_possible) * 100
-    grade = 100
+#     # grade = (total_points / points_possible) * 100
+#     grade = 100
 
-    context = {
-        'course': course,
-        'choices': choices,
-        'total_points': total_points,
-        'points_possible': points_possible,
-        'user': user,
-        'grade': grade,
-    }
+#     context = {
+#         'course': course,
+#         'choices': choices,
+#         'total_points': total_points,
+#         'points_possible': points_possible,
+#         'user': user,
+#         'grade': grade,
+#     }
+
+#     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
+    
+
+    
+def show_exam_result(request, course_id, submission_id):
+    context = {}
+    course = get_object_or_404(Course, pk=course_id)
+    submission = Submission.objects.get(id=submission_id)
+    choices = submission.choices.all()
+    total_score = 0
+    possible_points = 0
+
+    for questions in Question.objects.all():
+        possible_points += questions.grade
+
+
+    for choice in choices:
+        if choice.is_correct:
+            total_score += choice.question_id.grade
+    
+    total_score = (total_score / possible_points) * 100
+    
+    context['course'] = course
+    context['grade'] = total_score
+    context['choices'] = choices
 
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
-    
-
-    
-

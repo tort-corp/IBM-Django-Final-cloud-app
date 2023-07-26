@@ -56,16 +56,22 @@
                     <div class="card-header"><h5>{{ question.question_text }}</h5></div>
                     {% csrf_token %}
                     <div class="form-group">                    
-                        {% for answer in question.choice_set.all %}
+                        {% for option in question.choice_set.all %}
                             <div>                                
-                                {% if answer.is_correct == True and answer.id in choices == True %}
-                                    Correct Answer: {{ answer.choice_text }}
+                                {% if option.is_correct == True%}
+                                    {% if option in choices %}
+                                        <div class=text-success>   
+                                            Correct Answer: {{ option.choice_text }}
+                                        </div>                                      
 
-                                {% elif answer.is_correct == True %}  
-                                    Not Selected: {{ answer.choice_text }}
+                                    {% elif option.is_correct == True %}  
+                                    <div class=text-warning>   
+                                        Not Selected: {{ option.choice_text }}
+                                    </div>   
+                                    {% endif %} 
 
                                 {% else %}
-                                    {{ answer.choice_text }}
+                                    {{ option.choice_text }}
                                 {% endif %}
                             </div>
                         {% endfor %}                   
